@@ -6,12 +6,13 @@ function showNumber(i,j,number){
     var numberCell = $("#number-cell-"+i+"-"+j);
     numberCell.css("background-color", getBackgroundColor(number));
     numberCell.css("color", getColor(number));
+    numberCell.css('font-size',changeFontSize(number));
     numberCell.text(number);
     numberCell.animate({
-        width:"100px",
-        height:"100px",
-        top:getPosTop(i,j),
-        left:getPosLeft(i,j)
+        width:cellSideLength,
+        height:cellSideLength,
+        top:getPosTop(i),
+        left:getPosLeft(j)
     },50);
 }
 
@@ -23,8 +24,8 @@ function showNumber(i,j,number){
 function showMove(fromx, fromy, tox, toy){
     var numberCell=$("#number-cell-"+fromx+"-"+fromy);
     numberCell.animate({
-        top:getPosTop(tox,toy),
-        left:getPosLeft(tox,toy)
+        top:getPosTop(tox),
+        left:getPosLeft(toy)
     },200);
 }
 

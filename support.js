@@ -1,16 +1,19 @@
 /**
  * Created by RongJie on 11/16/16.
  */
+docWidth = window.screen.availWidth;
+gridContainerWidth=0.92*docWidth;
+cellSideLength = 0.18*docWidth;
+cellSpace = 0.04*docWidth;
 
 
-function getPosTop(row,col){
-    var top = 20+120*row;
+function getPosTop(row){
+    var top = cellSpace+(cellSpace+cellSideLength)*row;
     return top;
-
 }
 
-function getPosLeft(row,col){
-    var left = 20+120*col;
+function getPosLeft(col){
+    var left = cellSpace+(cellSpace+cellSideLength)*col;
     return left;
 }
 
@@ -121,6 +124,15 @@ function noMove(board){
         return false;
     }
     return true;
+}
+
+function changeFontSize(board){
+    if (docWidth<500){
+            return  board<500? 0.6*cellSideLength+'px' : 0.4*cellSideLength+'px';
+    }else{
+            return  board<500? '60px' : '40px';
+    }
+
 }
 
 

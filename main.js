@@ -2,10 +2,33 @@
 var board = [];
 var score= 0;
 var hasConflicted=[];
+var startx = 0;
+var starty = 0;
+var endx = 0;
+var endy = 0;
+
 
 $(document).ready(function(){
+    prepareForMobile();
     newGame();
 });
+
+function prepareForMobile(){
+    if(docWidth>500){
+        gridContainerWidth=500;
+        cellSpace =20;
+        cellSideLength=100;
+    }
+    $("#grid-container").css("width", gridContainerWidth-2*cellSpace);
+    $("#grid-container").css("height", gridContainerWidth-2*cellSpace);
+    $("#grid-container").css("padding", cellSpace);
+    $("#grid-container").css("border-radius", 0.02*gridContainerWidth);
+
+    $(".grid-cell").css("width",cellSideLength);
+    $(".grid-cell").css("height",cellSideLength);
+    $(".grid-cell").css("border-radius",0.06*cellSideLength);
+
+}
 
 function newGame(){
     init();
@@ -21,8 +44,8 @@ function init(){
     for (var i = 0; i<4;i++){
         for (var j = 0;j<4;j++){
             var box = $("#grid-cell-"+i+"-"+j);
-            box.css("top",getPosTop(i,j));
-            box.css("left",getPosLeft(i,j));
+            box.css("top",getPosTop(i));
+            box.css("left",getPosLeft(j));
         }
     }
     for (var i = 0; i<4;i++){
@@ -42,31 +65,35 @@ function init(){
 * if a number grid has a number > 0, show grid with the number
 * if not, the number grid becomes a point and is placed in the center of its background grid
  */
-function updateBoard(){
+function updateBoard() {
     $(".number-cell").remove();
-    for (var i = 0; i<4;i++){
-        for (var j=0;j<4;j++){
-            $("#grid-container").append("<div class='number-cell' id='number-cell-"+i+"-"+j+"'></div>");
-            var numbercell=$("#number-cell-"+i+"-"+j);
-            if(board[i][j]==0){
-                numbercell.css('width','0px');
-                numbercell.css('height','0px');
-                numbercell.css('top',getPosTop(i,j)+50);
-                numbercell.css('left',getPosLeft(i,j)+50);
+    for (var i = 0; i < 4; i++) {
+        for (var j = 0; j < 4; j++) {
+            $("#grid-container").append("<div class='number-cell' id='number-cell-" + i + "-" + j + "'></div>");
+            var numbercell = $("#number-cell-" + i + "-" + j);
+            if (board[i][j] == 0) {
+                numbercell.css('width', '0px');
+                numbercell.css('height', '0px');
+                numbercell.css('top', getPosTop(i) + cellSideLength / 2);
+                numbercell.css('left', getPosLeft(j) + cellSideLength / 2);
             }
-            else{
-                numbercell.css('width', '100px');
-                numbercell.css('height', '100px');
-                numbercell.css('top', getPosTop(i,j));
-                numbercell.css('left', getPosLeft(i,j));
+            else {
+                numbercell.css('width', cellSideLength);
+                numbercell.css('height', cellSideLength);
+                numbercell.css('top', getPosTop(i));
+                numbercell.css('left', getPosLeft(j));
                 numbercell.css('background-color', getBackgroundColor(board[i][j]));
                 numbercell.css('color', getColor(board[i][j]));
                 numbercell.text(board[i][j]);
+                numbercell.css('font-size',changeFontSize(board[i][j]));
             }
-            hasConflicted[i][j]=false;
-            }
+            hasConflicted[i][j] = false;
+
         }
     }
+    $('.number-cell').css('line-height', cellSideLength + 'px');
+    $('.number-cell').css('border-radius', 0.06 * cellSideLength + 'px');
+}
 
 /*
 generate a new number 
@@ -113,6 +140,7 @@ function genOneNumber(){
 $(document).keydown(function(event){
    switch(event.keyCode) {
        case 37://left
+           event.preventDefault();
            if(canMoveLeft(board)){
                moveLeft(board);
                setTimeout("genOneNumber()",200);
@@ -120,6 +148,7 @@ $(document).keydown(function(event){
            }
            break;
        case 38://up
+           event.preventDefault();
            if(canMoveUp(board)){
                moveUp(board);
                setTimeout("genOneNumber()",200);
@@ -127,6 +156,7 @@ $(document).keydown(function(event){
            }
            break;
        case 39://right
+           event.preventDefault();
            if(canMoveRight(board)){
                moveRight(board);
                setTimeout("genOneNumber()",200);
@@ -134,6 +164,7 @@ $(document).keydown(function(event){
            }
            break;
        case 40://down
+           event.preventDefault();
            if(canMoveDown(board)){
                moveDown(board);
                setTimeout("genOneNumber()",200);
@@ -144,6 +175,67 @@ $(document).keydown(function(event){
            break;
    }
 });
+
+document.addEventListener('touchstart', function(event){
+        startx = event.touches[0].pageX;
+        starty = event.touches[0].pageY;
+});
+
+document.addEventListener('touchsmove', function(event){
+    event.preventDefault();
+});
+
+document.addEventListener('touchend', function(event){
+    endx = event.changedTouches[0].pageX;
+    endy = event.changedTouches[0].pageY;
+
+        var deltax =endx-startx;
+        var deltay =endy-starty;
+
+    if(Math.abs(deltax)<0.3 * docWidth && Math.abs(deltay)<0.3 * docWidth){
+        return;
+    }
+
+
+        if(Math.abs(deltax)>=Math.abs(deltay)){
+            if(deltax>0){
+                //move right
+                if(canMoveRight(board)){
+                    moveRight(board);
+                    setTimeout("genOneNumber()",200);
+                    setTimeout("isGameOver()",300);
+                }
+            }else{
+                //move left
+                if(canMoveLeft(board)){
+                    moveLeft(board);
+                    setTimeout("genOneNumber()",200);
+                    setTimeout("isGameOver()",300);
+                }
+            }
+        } else{
+            if(deltay>0){
+                //move down
+                if(canMoveDown(board)){
+                    moveDown(board);
+                    setTimeout("genOneNumber()",200);
+                    setTimeout("isGameOver()",300);
+                }
+            }else{
+                //move up
+                if(canMoveUp(board)){
+                    moveUp(board);
+                    setTimeout("genOneNumber()",200);
+                    setTimeout("isGameOver()",300);
+                }
+            }
+
+        }
+
+
+    }
+);
+
 
 function moveLeft(board){
     for(var i = 0; i<4;i++){

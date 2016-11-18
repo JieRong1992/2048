@@ -9,16 +9,16 @@ html body {
 
 header{
     text-align: center;
-    width:500px;
+    width:100%;
     margin:0 auto;
     display:block;
 }
 header h1{
-    font-size:60px;
+    font-size:40px;
     font-weight:bold;
 }
 header #newgamebtn{
-    margin: 20px auto;
+    margin: 0px auto;
     width:100px;
     background-color:#8f7a66;
     padding:10px 10px;
@@ -36,29 +36,32 @@ header p{
 }
 
 #grid-container{
-    height:460px;
+    /*height:460px;
     width: 460px;
     padding:20px;
-    margin: 50px auto;
-    background-color:#bbada0;
+
     border-radius:10px;
+    */
+    margin: 0 auto;
+    background-color:#bbada0;
     position:relative;
 }
 .grid-cell{
     background-color: #ccc0b3;
     position: absolute;
-    width:100px;
+   /* width:100px;
     height:100px;
     border-radius:6px;
+    */
 }
 .number-cell{
 
-    font-size:60px;
+    /*font-size:60px;
     line-height: 100px;
+    border-radius:6px;
+    */
+
     font-weight: bold;
     text-align: center;
-
-    border-radius:6px;
-
     position:absolute;
 }
