@@ -3,13 +3,13 @@
  */
 
 
-function getPosTop(row){
+function getPosTop(row,col){
     var top = 20+120*row;
     return top;
 
 }
 
-function getPosLeft(col){
+function getPosLeft(row,col){
     var left = 20+120*col;
     return left;
 }
@@ -101,6 +101,15 @@ function canMoveDown(board){
 function noBlockH(row,col1,col2,board){
     for(var i=col1+1; i<col2; i++){
         if(board[row][i]!=0){
+            return false;
+        }
+    }
+    return true;
+}
+
+function noBlockV(col,row1,row2,board){
+    for(var i=row1+1; i<row2; i++){
+        if(board[i][col]!=0){
             return false;
         }
     }
