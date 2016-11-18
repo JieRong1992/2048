@@ -1,6 +1,7 @@
 
 var board = [];
 var score= 0;
+var hasConflicted=[];
 
 $(document).ready(function(){
     newGame();
@@ -26,11 +27,14 @@ function init(){
     }
     for (var i = 0; i<4;i++){
         board[i]=[];
+        hasConflicted[i]=[];
         for (var j=0;j<4;j++){
-            board[i][j]=0
+            board[i][j]=0;
+            hasConflicted[i][j]=false;
         }
     }
     updateBoard();
+    score = 0;
 }
 
 
@@ -59,6 +63,7 @@ function updateBoard(){
                 numbercell.css('color', getColor(board[i][j]));
                 numbercell.text(board[i][j]);
             }
+            hasConflicted[i][j]=false;
             }
         }
     }
@@ -74,13 +79,25 @@ function genOneNumber(){
     //get a random position
     var x = parseInt(Math.floor(Math.random()*4));
     var y = parseInt(Math.floor(Math.random()*4));
-    while (true){
+    var times = 0;
+    while (times < 50){
         if(board[x][y]==0){
             break;
         }else{
             var x = parseInt(Math.floor(Math.random()*4));
             var y = parseInt(Math.floor(Math.random()*4));
         }
+        times++;
+    }
+    if (times==50){
+        for (var i = 0; i<4;i++) {
+            for (var j = 0; j < 4; j++) {
+                if(board[i][j]==0){
+                    x = i;
+                    y = j;
+                }
+            }
+         }
     }
 
     //generate a new number in [2,4]
@@ -99,28 +116,28 @@ $(document).keydown(function(event){
            if(canMoveLeft(board)){
                moveLeft(board);
                setTimeout("genOneNumber()",200);
-               isGameOver();
+               setTimeout("isGameOver()",300);
            }
            break;
        case 38://up
            if(canMoveUp(board)){
                moveUp(board);
                setTimeout("genOneNumber()",200);
-               isGameOver();
+               setTimeout("isGameOver()",300);
            }
            break;
        case 39://right
            if(canMoveRight(board)){
                moveRight(board);
                setTimeout("genOneNumber()",200);
-               isGameOver();
+               setTimeout("isGameOver()",300);
            }
            break;
        case 40://down
            if(canMoveDown(board)){
                moveDown(board);
                setTimeout("genOneNumber()",200);
-               isGameOver();
+               setTimeout("isGameOver()",300);
            }
            break;
        default:
@@ -140,12 +157,17 @@ function moveLeft(board){
                         board[i][k]=board[i][j];
                         board[i][j]=0;
                         break;
-                    }else if( board[i][k]==board[i][j] && noBlockH(i,k,j,board)){
+                    }else if( !hasConflicted[i][k] && board[i][k]==board[i][j] && noBlockH(i,k,j,board)){
                         //move
                         showMove(i,j,i,k);
                         //add
                         board[i][k]+=board[i][j];
                         board[i][j]=0;
+                        
+                        // score
+                        score += board[i][k];
+                        updateScore(score);
+                        hasConflicted[i][k]=true;
                         break;
                     }
                 }
@@ -167,12 +189,16 @@ function moveRight(board){
                         board[i][k] = board[i][j];
                         board[i][j]= 0;
                         break
-                    }else if( board[i][k]==board[i][j] && noBlockH(i,j,k,board)){
+                    }else if(!hasConflicted[i][k]&& board[i][k]==board[i][j] && noBlockH(i,j,k,board)){
                         //move
                         showMove(i,j,i,k);
                         //add
                         board[i][k] += board[i][j];
                         board[i][j] = 0;
+                        // score
+                        score+=board[i][k];
+                        updateScore(score);
+                        hasConflicted[i][k]=true;
                         break;
                     }
                 }
@@ -196,12 +222,21 @@ function moveUp(board){
                         showMove(i,j,k,j);
                         board[k][j]=board[i][j];
                         board[i][j]=0;
-                    }else if( board[k][j]==board[i][j] && noBlockV(j,k,i,board)){
+                        // score
+                        score+=board[k][j];
+                        updateScore(score);
+                        break;
+                    }else if(!hasConflicted[k][j] && board[k][j]==board[i][j] && noBlockV(j,k,i,board)){
                         //move
                         showMove(i,j,k,j);
                         //add
                         board[k][j]+=board[i][j];
                         board[i][j]=0;
+                        // score
+                        score+=board[k][j];
+                        updateScore(score);
+                        hasConflicted[k][j] = true;
+                        break;
                     }
                 }
             }
@@ -221,12 +256,18 @@ function moveDown(){
                         showMove(i,j,k,j);
                         board[k][j]=board[i][j];
                         board[i][j]=0;
-                    }else if( board[k][j]==board[i][j] && noBlockV(j,i,k,board)){
+                        break;
+                    }else if( !hasConflicted[k][j] && board[k][j]==board[i][j] && noBlockV(j,i,k,board)){
                         //move
                         showMove(i,j,k,j);
                         //add
                         board[k][j]+=board[i][j];
                         board[i][j]=0;
+                        // score
+                        score+=board[k][j];
+                        updateScore(score);
+                        hasConflicted[k][j]=true;
+                        break;
                     }
                 }
             }
@@ -235,5 +276,13 @@ function moveDown(){
     }
     setTimeout("updateBoard()",200);
 
+}
+ function isGameOver(){
+     if(noSpace(board) && noMove(board)){
+         gameOver();
+     }
+ }
+function gameOver(){
+    alert("Your score is "+score);
 }
 

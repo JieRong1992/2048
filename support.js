@@ -67,7 +67,7 @@ function canMoveLeft(board){
 
 function canMoveRight(board){
     for(var i = 0; i<4;i++){
-        for(var j = 0; j<3; j++){
+        for(var j = 2; j>=0; j--){
             if(board[i][j+1]==0||board[i][j]==board[i][j+1]){
                 return true
             }
@@ -77,8 +77,8 @@ function canMoveRight(board){
 }
 
 function canMoveUp(board){
-    for(var i = 1; i<4;i++){
-        for(var j = 0; j<4; j++){
+    for(var j= 0; j<4;j++){
+        for(var i = 1; i<4; i++){
             if(board[i-1][j]==0||board[i][j]==board[i-1][j]){
                 return true
             }
@@ -88,8 +88,8 @@ function canMoveUp(board){
 }
 
 function canMoveDown(board){
-    for(var i = 0; i<3; i++){
-        for(var j = 0; j<4; j++){
+    for(var j = 0; j<4; j++){
+        for(var i = 2; i>=0; i--){
             if(board[i+1][j]==0||board[i][j]==board[i+1][j]){
                 return true
             }
@@ -116,8 +116,11 @@ function noBlockV(col,row1,row2,board){
     return true;
 }
 
-function isGameOver(){
-
+function noMove(board){
+    if(canMoveDown(board) || canMoveLeft(board) || canMoveRight(board) || canMoveUp(board)){
+        return false;
+    }
+    return true;
 }
 
 
