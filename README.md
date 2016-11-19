@@ -22,7 +22,6 @@ For numbers in borad greater than zero, display corresponding grid with the numb
 ##Game logic implementation
 work circle：
  user action ——> able to move grids? yes ——> move numbers——> update numbers——> generate a new number——> game over or not? 
-                                     no  ——> waitting for next action
 
 ####User Operation
 
