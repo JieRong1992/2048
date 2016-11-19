@@ -1,6 +1,6 @@
 2048
 ====
-## *a 2048 game App by JavaScript*
+## jierong.me/2048
 
 用 JavaScript, JQuery, HTML/CSS3 实现的 2048 游戏。搭建过程分为三大部分：
 
