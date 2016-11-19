@@ -22,15 +22,97 @@
 
 ####用户操作
 
+    用 $(document).keydown(function(event){}) 监听上下左右四个键
+
 ####移动格子
+上下左右四个方向的逻辑基本一致，所以只以向左为例：
+
+ · 用一个双层循环依次把每一行向左移
+ · 对于每一行，最左边的数不需要往左移，所以从第二个数开始判断它是否能向左移
+ · 
+
+
+        function moveLeft(board){
+      for(var i = 0; i<4;i++){
+        for(var j = 1; j<4; j++){
+          if (board[i][j]!=0){
+                for(var k=0;k<j;k++){
+                    if(board[i][k]==0 && noBlockH(i,k,j,board)){
+                        //move
+                        showMove(i,j,i,k);
+                        board[i][k]=board[i][j];
+                        board[i][j]=0;
+                        break;
+                    }else if( !hasConflicted[i][k] && board[i][k]==board[i][j] && noBlockH(i,k,j,board)){
+                        //move
+                        showMove(i,j,i,k);
+                        //add
+                        board[i][k]+=board[i][j];
+                        board[i][j]=0;
+                        
+                        // score
+                        score += board[i][k];
+                        updateScore(score);
+                        hasConflicted[i][k]=true;
+                        break;
+                    }
+                }     
+            }
+        }
+      }
+
 
 ####更新数字
+根据二维数组board中存储的数据，更新数字格子
+    
+    function updateBoard() {
+    $(".number-cell").remove();
+    for (var i = 0; i < 4; i++) {
+        for (var j = 0; j < 4; j++) {
+            $("#grid-container").append("<div class='number-cell' id='number-cell-" + i + "-" + j + "'></div>");
+            var numbercell = $("#number-cell-" + i + "-" + j);
+            if (board[i][j] == 0) {
+                numbercell.css('width', '0px');
+                numbercell.css('height', '0px');
+                numbercell.css('top', getPosTop(i) + cellSideLength / 2);
+                numbercell.css('left', getPosLeft(j) + cellSideLength / 2);
+            }
+            else {
+                numbercell.css('width', cellSideLength);
+                numbercell.css('height', cellSideLength);
+                numbercell.css('top', getPosTop(i));
+                numbercell.css('left', getPosLeft(j));
+                numbercell.css('background-color', getBackgroundColor(board[i][j]));
+                numbercell.css('color', getColor(board[i][j]));
+                numbercell.text(board[i][j]);
+                numbercell.css('font-size',changeFontSize(board[i][j]));
+            }
+            hasConflicted[i][j] = false;
+
+        }
+    }
+    $('.number-cell').css('line-height', cellSideLength + 'px');
+    $('.number-cell').css('border-radius', 0.06 * cellSideLength + 'px');
+    }
 
 ####产生新格子
+随机生成数字2或者4，在随机生成一个位置，如果该位置上的原数值为0， 则在这个位置上显示新生成的数字
 
 ####判断结束
+如果二维数组board的每个值都不为零，且不能再往上下左右任意方向移动，则游戏结束
+
+     function isGameOver(){
+     if(noSpace(board) && noMove(board)){
+         gameOver();
+     }
+    }
 
 ##交互设计和自适应设计
+为了使游戏适应手机屏幕，所以把参数设为百分比
+同时加了触屏控制
+
+    document.addEventListener('touchstart', function(event){})
+    document.addEventListener('touchend', function(event){}）
 
 ##遇到的问题
 
