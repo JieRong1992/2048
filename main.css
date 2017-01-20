@@ -6,6 +6,13 @@ html body {
     box-sizing: border-box;
     font-family:Arial;
 }
+a{
+    text-decoration: none;
+    color: cornflowerblue;
+}
+a:hover{
+    color: lightskyblue;
+}
 
 header{
     text-align: center;
@@ -18,13 +25,14 @@ header h1{
     font-weight:bold;
 }
 header #newgamebtn{
-    margin: 0px auto;
+    margin: 0 auto;
     width:100px;
     background-color:#8f7a66;
     padding:10px 10px;
     color: white;
     border-radius: 10px;
     text-decoration: none;
+    display: inline-block;
 }
 header #newgamebtn:hover{
     background-color: #9f8b77;
@@ -35,6 +43,19 @@ header p{
     margin:20px auto;
 }
 
+#buttons p{
+    display: inline-block;
+}
+#intro p{
+    font-size: 18px;
+}
+#intro h1{
+    margin-top: 0;
+}
+#imooc{
+
+}
+
 #grid-container{
     /*height:460px;
     width: 460px;
@@ -42,17 +63,17 @@ header p{
 
     border-radius:10px;
     */
-    margin: 0 auto;
+    margin: 0 auto 30px;
     background-color:#bbada0;
     position:relative;
 }
 .grid-cell{
     background-color: #ccc0b3;
     position: absolute;
-   /* width:100px;
-    height:100px;
-    border-radius:6px;
-    */
+    /* width:100px;
+     height:100px;
+     border-radius:6px;
+     */
 }
 .number-cell{
 
